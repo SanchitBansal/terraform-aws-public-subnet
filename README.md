@@ -16,6 +16,44 @@ module "public_subnet" {
   organization = "github"
 
   public_subnets = ["192.168.100.0/25", "192.168.100.128/25"]
+
+  public_network_acl_egress = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+    {
+      rule_no    = 200
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+  ]
+
+  public_network_acl_ingress = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+    {
+      rule_no    = 200
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+  ]
 }
 ```
 
@@ -34,7 +72,45 @@ module "public_subnet" {
   businessunit = "techteam"
   organization = "github"
 
-  public_subnets = ["192.168.100.0/25", "192.168.100.128/25", "192.168.101.0/25"]	
+  public_subnets = ["192.168.100.0/25", "192.168.100.128/25", "192.168.101.0/25"]
+
+  public_network_acl_egress = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 443
+      to_port    = 443
+      protocol   = "tcp"
+    },
+    {
+      rule_no    = 200
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+  ]
+
+  public_network_acl_ingress = [
+    {
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 443
+      to_port    = 443
+      protocol   = "tcp"
+    },
+    {
+      rule_no    = 200
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 1024
+      to_port    = 65535
+      protocol   = "tcp"
+    },
+  ]
 }
 ```
 
