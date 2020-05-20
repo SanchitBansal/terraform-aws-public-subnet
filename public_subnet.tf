@@ -50,15 +50,15 @@ resource "aws_route_table" "public" {
 # Resource to assosiate route tables to subnets
 
 resource "aws_route_table_association" "public" {
-  subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
-  route_table_id = "${element(aws_route_table.public.*.id, count.index)}"
+  subnet_id      = "${aws_subnet.public.*.id[count.index]}"
+  route_table_id = "${aws_route_table.public.*.id[count.index]}"
   count          = "${length(var.public_subnets)}"
 }
 
 # Resource to create a routing table entry (a route) for internet gateway
 
 resource "aws_route" "public" {
-  route_table_id         = "${element(aws_route_table.public.*.id, count.index)}"
+  route_table_id         = "${aws_route_table.public.*.id[count.index]}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.igw.id}"
   count                  = "${length(var.public_subnets)}"
@@ -80,8 +80,8 @@ resource "aws_eip" "nateip" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  allocation_id = "${element(aws_eip.nateip.*.id, count.index)}"
-  subnet_id     = "${element(aws_subnet.public.*.id, count.index)}"
+  allocation_id = "${aws_eip.nateip.*.id[count.index]}"
+  subnet_id     = "${aws_subnet.public.*.id[count.index]}"
   count         = "${length(var.public_subnets)}"
 
   tags {
