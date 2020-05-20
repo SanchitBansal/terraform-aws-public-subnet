@@ -101,8 +101,6 @@ resource "aws_network_acl" "public" {
   egress     = "${var.public_network_acl_egress}"
   ingress    = "${var.public_network_acl_ingress}"
 
-  depends_on = ["aws_subnet.public"]
-
   tags {
     Name         = "${format("%s-acl-%s", var.environment, var.name)}"
     environment  = "${var.environment}"
