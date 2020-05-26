@@ -7,14 +7,13 @@ resource "aws_subnet" "public" {
   availability_zone = "${element(var.availability_zones, count.index)}"
   count             = "${length(var.public_subnets)}"
 
-  tags {
-    Name         = "${format("%s-%s-public-%s", var.environment, var.name, element(split("-", element(var.availability_zones, count.index)),2))}"
-    role         = "${var.name}"
-    az           = "${element(var.availability_zones, count.index)}"
-    environment  = "${var.environment}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-%s-public-%s", var.environment, var.name, element(split("-", element(var.availability_zones, count.index)),2))}"),
+    map("role", "${var.name}"),
+    map("az", "${element(var.availability_zones, count.index)}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }
 
 # Resource to create internet gateway
@@ -23,12 +22,11 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = "${var.vpc_id}"
   count  = "${length(var.public_subnets) >= 1 ? 1 : 0}"
 
-  tags {
-    Name         = "${format("%s-igw", var.environment)}"
-    environment  = "${var.environment}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-igw", var.environment)}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }
 
 #Resource to create route tables
@@ -37,14 +35,13 @@ resource "aws_route_table" "public" {
   vpc_id = "${var.vpc_id}"
   count  = "${length(var.public_subnets)}"
 
-  tags {
-    Name         = "${format("%s-%s-rt-public-%s", var.environment, var.name, element(split("-", element(var.availability_zones, count.index)),2))}"
-    role         = "${var.name}"
-    az           = "${element(var.availability_zones, count.index)}"
-    environment  = "${var.environment}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-%s-rt-public-%s", var.environment, var.name, element(split("-", element(var.availability_zones, count.index)),2))}"),
+    map("role", "${var.name}"),
+    map("az", "${element(var.availability_zones, count.index)}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }
 
 # Resource to assosiate route tables to subnets
@@ -70,13 +67,12 @@ resource "aws_eip" "nateip" {
   vpc   = true
   count = "${length(var.availability_zones)}"
 
-  tags {
-    Name         = "${format("%s-eip-%s", var.environment, var.name)}"
-    environment  = "${var.environment}"
-    role         = "${var.name}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-eip-%s", var.environment, var.name)}"),
+    map("role", "${var.name}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }
 
 resource "aws_nat_gateway" "nat" {
@@ -84,13 +80,12 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = "${aws_subnet.public.*.id[count.index]}"
   count         = "${length(var.public_subnets)}"
 
-  tags {
-    Name         = "${format("%s-nat-%s", var.environment, var.name)}"
-    environment  = "${var.environment}"
-    role         = "${var.name}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-nat-%s", var.environment, var.name)}"),
+    map("role", "${var.name}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }
 
 # Resource to create NACL
@@ -101,11 +96,10 @@ resource "aws_network_acl" "public" {
   egress     = "${var.public_network_acl_egress}"
   ingress    = "${var.public_network_acl_ingress}"
 
-  tags {
-    Name         = "${format("%s-acl-%s", var.environment, var.name)}"
-    environment  = "${var.environment}"
-    role         = "${var.name}"
-    organization = "${var.organization}"
-    businessunit = "${var.businessunit}"
-  }
+  tags = "${merge(
+    map("Name", "${format("%s-acl-%s", var.environment, var.name)}"),
+    map("role", "${var.name}"),
+    map("environment", "${var.environment}"),
+    var.custom_tags)
+  }"
 }

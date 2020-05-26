@@ -12,8 +12,11 @@ module "public_subnet" {
   name = "lb"
   environment = "test"
   availability_zones  = ["ap-south-1a", "ap-south-1b"]
-  businessunit = "techteam"
-  organization = "github"
+
+  custom_tags = {
+    "organization" = "github"
+    "businessunit" = "techteam"
+  }
 
   public_subnets = ["192.168.100.0/25", "192.168.100.128/25"]
 
@@ -64,13 +67,16 @@ Also you can increase/ decrease availability zones as the requirement comes in f
 ```hcl
 module "public_subnet" {
   source = "github.com/SanchitBansal/terraform-public-subnet.git"
-  
+
   vpc_id = "vpc-xxxxx"
   name = "lb"
   environment = "test"
   availability_zones  = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
-  businessunit = "techteam"
-  organization = "github"
+
+  custom_tags = {
+    "organization" = "github"
+    "businessunit" = "techteam"
+  }
 
   public_subnets = ["192.168.100.0/25", "192.168.100.128/25", "192.168.101.0/25"]
 
